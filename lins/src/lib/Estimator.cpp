@@ -64,7 +64,7 @@ void LinsFusion::initialization() {
   pubOutlierCloudLast =
       pnh_.advertise<sensor_msgs::PointCloud2>("/outlier_cloud_last", 2);
   pubLaserOdometry =
-      pnh_.advertise<nav_msgs::Odometry>(LIDAR_ODOMETRY_TOPIC, 5);
+      pnh_.advertise<nav_msgs::Odometry>(LIDAR_ODOMETRY_TOPIC, 2000);
 
   // Set types of the point cloud
   distortedPointCloud.reset(new pcl::PointCloud<PointType>());

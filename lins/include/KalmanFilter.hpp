@@ -260,9 +260,13 @@ class StatePredictor {
     V3D covAcc = INIT_ACC_STD.array().square();
     V3D covGyr = INIT_GYR_STD.array().square();
 
+    // covariance on the accelerometer measurement
     double peba = pow(ACC_N * ug, 2);
+    // covariance on the gyroscope measurement
     double pebg = pow(GYR_N * dph, 2);
+    // covariance on the accelerometer random walk
     double pweba = pow(ACC_W * ugpsHz, 2);
+    // covariance on the gyroscope random walk
     double pwebg = pow(GYR_W * dpsh, 2);
     V3D gra_cov(0.01, 0.01, 0.01);
 
