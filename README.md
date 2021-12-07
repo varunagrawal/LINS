@@ -42,7 +42,7 @@ roslaunch lins run_port_exp.launch
 
 Notes: The parameter "/use_sim_time" is set to "true" for simulation, "false" to real robot usage.
 
-1. Play existing bag files:
+2. Play existing bag files:
 
 ```
 rosbag play *.bag --clock --topic /velodyne_points /imu/data

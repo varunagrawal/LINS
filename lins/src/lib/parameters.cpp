@@ -131,14 +131,14 @@ void readParameters(ros::NodeHandle& n) {
   readQ4D(&fsSettings, "init_rbl", INIT_RBL);
 }
 
-void readV3D(cv::FileStorage* file, const std::__cxx11::string& name,
+void readV3D(cv::FileStorage* file, const std::string& name,
              V3D& vec_eigen) {
   cv::Mat vec_cv;
   (*file)[name] >> vec_cv;
   cv::cv2eigen(vec_cv, vec_eigen);
 }
 
-void readQ4D(cv::FileStorage* file, const std::__cxx11::string& name,
+void readQ4D(cv::FileStorage* file, const std::string& name,
              Q4D& quat_eigen) {
   cv::Mat mat_cv;
   (*file)[name] >> mat_cv;

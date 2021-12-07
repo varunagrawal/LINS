@@ -2,7 +2,7 @@
 #define INCLUDE_UTILITY_H_
 
 #include <nav_msgs/Odometry.h>
-#include <opencv/cv.h>
+#include <opencv2/core.hpp>
 #include <pcl/common/common.h>
 #include <pcl/filters/filter.h>
 #include <pcl/filters/voxel_grid.h>
