@@ -62,6 +62,7 @@ class LinsFusion {
   void run();
   void initialization();
   void publishTopics();
+  void publishIMUOdometry();
   void publishOdometryYZX(double timeStamp);
   inline void publishCloudMsg(ros::Publisher& publisher,
                               pcl::PointCloud<PointType>::Ptr cloud,

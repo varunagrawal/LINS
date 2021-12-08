@@ -65,6 +65,7 @@ void LinsFusion::initialization() {
       pnh_.advertise<sensor_msgs::PointCloud2>("/outlier_cloud_last", 2);
   pubLaserOdometry =
       pnh_.advertise<nav_msgs::Odometry>(LIDAR_ODOMETRY_TOPIC, 2000);
+  pubIMUOdometry = pnh_.advertise<nav_msgs::Odometry>("/odometry_output", 2000);
 
   // Set types of the point cloud
   distortedPointCloud.reset(new pcl::PointCloud<PointType>());
@@ -232,13 +233,17 @@ bool LinsFusion::processPointClouds() {
     double dt =
         std::min(imuBuf_.itMeas_->first, scan_time_) - estimator->getTime();
     Imu imu = imuBuf_.itMeas_->second;
+    // Perform EKF predict step
     estimator->processImu(dt, imu.acc, imu.gyr);
+
+    publishIMUOdometry();
   }
 
   Imu imu;
   imuBuf_.getLastMeas(imu);
 
   // Update the iterative-ESKF using a new PCL
+  // Perform EKF update step
   estimator->processPCL(scan_time_, imu, distortedPointCloud, cloudInfoMsg,
                         outlierPointCloud);
 
@@ -317,6 +322,20 @@ void LinsFusion::publishOdometryYZX(double timeStamp) {
                                            estimator->globalStateYZX_.rn_[1],
                                            estimator->globalStateYZX_.rn_[2]));
   tfBroadcaster.sendTransform(laserOdometryTrans);
+}
+
+void LinsFusion::publishIMUOdometry() {
+  if (pubIMUOdometry.getNumSubscribers() != 0) {
+    imuOdometry.header.stamp = ros::Time::now();
+    imuOdometry.pose.pose.orientation.x = estimator->filter_->state_.qbn_.x();
+    imuOdometry.pose.pose.orientation.y = estimator->filter_->state_.qbn_.y();
+    imuOdometry.pose.pose.orientation.z = estimator->filter_->state_.qbn_.z();
+    imuOdometry.pose.pose.orientation.w = estimator->filter_->state_.qbn_.w();
+    imuOdometry.pose.pose.position.x = estimator->filter_->state_.rn_[0];
+    imuOdometry.pose.pose.position.y = estimator->filter_->state_.rn_[1];
+    imuOdometry.pose.pose.position.z = estimator->filter_->state_.rn_[2];
+    pubIMUOdometry.publish(imuOdometry);
+  }
 }
 
 // void LinsFusion::performImuBiasEstimation() {
